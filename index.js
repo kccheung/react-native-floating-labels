@@ -24,10 +24,10 @@ class FloatingLabelInput extends Component {
     this.state = {
       text: this.props.value,
       dirty: isDirty,
-      labelStyle = {
+      labelStyle: {
         fontSize: new Animated.Value(style.fontSize),
         top: new Animated.Value(style.top)
-      }
+      },
     };
   }
 

@@ -17,6 +17,11 @@ class FloatingLabelInput extends Component {
 
   constructor(props) {
     super(props);
+    this._animate = this._animate.bind(this);
+    this._onBlur = this._onBlur.bind(this);
+    this._onFocus = this._onFocus.bind(this);
+    this.onChangeText = this.onChangeText.bind(this);
+    this.updateText = this.updateText.bind(this);
 
     const isDirty = (this.props.value || this.props.placeholder);
     const style = isDirty ? dirtyStyle : cleanStyle;
@@ -29,13 +34,6 @@ class FloatingLabelInput extends Component {
         top: new Animated.Value(style.top)
       },
     };
-  }
-
-  componentWillReceiveProps (props) {
-    if (typeof props.value !== 'undefined' && props.value !== this.state.text) {
-      this.setState({ text: props.value, dirty: !!props.value })
-      this._animate(!!props.value)
-    }
   }
 
   _animate(dirty) {
@@ -52,12 +50,19 @@ class FloatingLabelInput extends Component {
       )
     })
 
-    Animated.parallel(anims).start()
+    Animated.parallel(anims).start();
+  }
+
+  componentWillReceiveProps (props) {
+    if (typeof props.value !== 'undefined' && props.value !== this.state.text) {
+      this.setState({ text: props.value, dirty: !!props.value });
+      this._animate(!!props.value);
+    }
   }
 
   _onFocus () {
-    this._animate(true)
-    this.setState({dirty: true})
+    this._animate(true);
+    this.setState({dirty: true});
     if (this.props.onFocus) {
       this.props.onFocus(arguments);
     }
@@ -65,7 +70,7 @@ class FloatingLabelInput extends Component {
 
   _onBlur () {
     if (!this.state.text) {
-      this._animate(false)
+      this._animate(false);
       this.setState({dirty: false});
     }
 
@@ -77,7 +82,7 @@ class FloatingLabelInput extends Component {
   onChangeText(text) {
     this.setState({ text })
     if (this.props.onChangeText) {
-      this.props.onChangeText(text)
+      this.props.onChangeText(text);
     }
   }
 
@@ -86,7 +91,7 @@ class FloatingLabelInput extends Component {
     this.setState({ text })
 
     if (this.props.onEndEditing) {
-      this.props.onEndEditing(event)
+      this.props.onEndEditing(event);
     }
   }
 
@@ -95,8 +100,7 @@ class FloatingLabelInput extends Component {
       <Animated.Text
         ref='label'
         numberOfLines={this.props.numberOfLines}
-        style={[this.state.labelStyle, styles.label, this.props.labelStyle]}
-      >
+        style={[this.state.labelStyle, styles.label, this.props.labelStyle]}>
         {this.props.children}
       </Animated.Text>
     )
@@ -145,7 +149,7 @@ class FloatingLabelInput extends Component {
     }
 
     return (
-  		<View style={elementStyles}>
+      <View style={elementStyles}>
         {this._renderLabel()}
         <TextInput
           ref={(r) => { this.input = r; }}

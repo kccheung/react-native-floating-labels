@@ -10,7 +10,9 @@ import {
   Easing,
   Text,
   View,
-  Platform
+  Platform,
+  TouchableOpacity,
+  Image
 } from 'react-native';
 
 class FloatingLabelInput extends Component {
@@ -25,6 +27,7 @@ class FloatingLabelInput extends Component {
 
     const isDirty = (this.props.value || this.props.placeholder);
     const style = isDirty ? dirtyStyle : cleanStyle;
+    this.isPasswordField = this.props.secureTextEntry;
 
     this.state = {
       text: this.props.value,
@@ -33,6 +36,8 @@ class FloatingLabelInput extends Component {
         fontSize: new Animated.Value(style.fontSize),
         top: new Animated.Value(style.top)
       },
+      hidePassword: true,
+      hideCaret: false
     };
   }
 
@@ -95,6 +100,19 @@ class FloatingLabelInput extends Component {
     }
   }
 
+  managePasswordVisibility = () => {
+    this.setState({ hidePassword: !this.state.hidePassword });
+    // this.setState({ hideCaret: true });
+    // setTimeout(() => {this.setState({ hideCaret: true });}, 300);
+    // this.setState({ hideCaret: false });
+    // setTimeout(() => {
+    //     this.setState({ hideCaret: false });
+    //     this.passcode.focus();
+    // }, 1000);
+    // this.passcode.blur();
+    // setTimeout(() => {this.passcode.focus()}, 300);
+  }
+
   _renderLabel () {
     return (
       <Animated.Text
@@ -103,7 +121,22 @@ class FloatingLabelInput extends Component {
         style={[this.state.labelStyle, styles.label, this.props.labelStyle]}>
         {this.props.children}
       </Animated.Text>
-    )
+    );
+  }
+
+  _renderShowPasswordButton () {
+    if (this.isPasswordField) {
+        let source = (this.state.hidePassword) ? this.props.enableImg : this.props.disableImg;
+        return (
+            <TouchableOpacity activeOpacity={ 0.8 }
+                style={ styles.visibilityBtn }
+                onPress={ this.managePasswordVisibility }>
+                <Image source={source}
+                    style={ styles.btnImage } />
+            </TouchableOpacity>
+        );
+    }
+    return <View/>;
   }
 
   render() {
@@ -129,7 +162,6 @@ class FloatingLabelInput extends Component {
         onSubmitEditing: this.props.onSubmitEditing,
         password: this.props.secureTextEntry || this.props.password, // Compatibility
         placeholder: this.props.placeholder,
-        secureTextEntry: this.props.secureTextEntry || this.props.password, // Compatibility
         returnKeyType: this.props.returnKeyType,
         selectTextOnFocus: this.props.selectTextOnFocus,
         selectionState: this.props.selectionState,
@@ -153,11 +185,17 @@ class FloatingLabelInput extends Component {
     return (
       <View style={elementStyles}>
         {this._renderLabel()}
-        <TextInput
-          ref={(r) => { inputRef && inputRef(r); }}
-          {...props}
-        >
-        </TextInput>
+        <View style={{flex: 1, flexDirection: 'row' }}>
+            <TextInput
+                ref={(r) => {
+                    inputRef && inputRef(r);
+                    this.passcode = r;
+                }}
+                secureTextEntry={ this.isPasswordField && this.state.hidePassword }
+                caretHidden={ this.state.hideCaret }
+                {...props} />
+            {this._renderShowPasswordButton()}
+        </View>
       </View>
     );
   }
@@ -189,6 +227,7 @@ const styles = StyleSheet.create({
     position: 'relative'
   },
   input: {
+    flexGrow: 1,
     height: 40,
     borderColor: 'gray',
     backgroundColor: 'transparent',
@@ -198,9 +237,20 @@ const styles = StyleSheet.create({
     fontSize: 20,
     borderRadius: 4,
     paddingLeft: 0,
-    marginTop: 20,
+    marginTop: 20
   },
-  label: labelStyleObj
+  label: labelStyleObj,
+  visibilityBtn: {
+    marginTop: 20,
+    height: 40,
+    width: 35,
+    padding: 5
+  },
+  btnImage: {
+    resizeMode: 'contain',
+    height: '100%',
+    width: '100%'
+  }
 })
 
 const cleanStyle = {

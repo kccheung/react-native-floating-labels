@@ -107,6 +107,7 @@ class FloatingLabelInput extends Component {
   }
 
   render() {
+    let inputRef = this.props.inputRef;
     let props = {
         autoCapitalize: this.props.autoCapitalize,
         autoCorrect: this.props.autoCorrect,
@@ -132,6 +133,7 @@ class FloatingLabelInput extends Component {
         returnKeyType: this.props.returnKeyType,
         selectTextOnFocus: this.props.selectTextOnFocus,
         selectionState: this.props.selectionState,
+        spellCheck: this.props.spellCheck,
         style: [styles.input],
         testID: this.props.testID,
         value: this.state.text,
@@ -152,14 +154,13 @@ class FloatingLabelInput extends Component {
       <View style={elementStyles}>
         {this._renderLabel()}
         <TextInput
-          ref={(r) => { this.input = r; }}
+          ref={(r) => { inputRef && inputRef(r); }}
           {...props}
         >
         </TextInput>
       </View>
     );
   }
-
 }
 
 const textPropTypes = Text.propTypes || View.propTypes;
@@ -174,7 +175,7 @@ FloatingLabelInput.propTypes = {
 
 let labelStyleObj = {
   marginTop: 21,
-  paddingLeft: 9,
+  paddingLeft: 0,
   color: '#AAA',
   position: 'absolute'
 }
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 20,
     borderRadius: 4,
-    paddingLeft: 10,
+    paddingLeft: 0,
     marginTop: 20,
   },
   label: labelStyleObj

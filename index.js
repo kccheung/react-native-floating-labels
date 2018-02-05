@@ -85,7 +85,7 @@ class FloatingLabelInput extends Component {
   }
 
   onChangeText(text) {
-    this.setState({ text })
+    this.setState({ text });
     if (this.props.onChangeText) {
       this.props.onChangeText(text);
     }
@@ -93,7 +93,7 @@ class FloatingLabelInput extends Component {
 
   updateText(event) {
     const text = event.nativeEvent.text
-    this.setState({ text })
+    this.setState({ text });
 
     if (this.props.onEndEditing) {
       this.props.onEndEditing(event);
@@ -102,15 +102,10 @@ class FloatingLabelInput extends Component {
 
   managePasswordVisibility = () => {
     this.setState({ hidePassword: !this.state.hidePassword });
-    // this.setState({ hideCaret: true });
-    // setTimeout(() => {this.setState({ hideCaret: true });}, 300);
-    // this.setState({ hideCaret: false });
-    // setTimeout(() => {
-    //     this.setState({ hideCaret: false });
-    //     this.passcode.focus();
-    // }, 1000);
-    // this.passcode.blur();
-    // setTimeout(() => {this.passcode.focus()}, 300);
+  }
+
+  hidePassword = () => {
+    this.setState({ hidePassword: true });
   }
 
   _renderLabel () {

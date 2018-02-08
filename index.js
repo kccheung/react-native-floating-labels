@@ -12,7 +12,8 @@ import {
   View,
   Platform,
   TouchableOpacity,
-  Image
+  Image,
+  ViewPropTypes
 } from 'react-native';
 
 class FloatingLabelInput extends Component {
@@ -42,18 +43,17 @@ class FloatingLabelInput extends Component {
   }
 
   _animate(dirty) {
-    const nextStyle = dirty ? dirtyStyle : cleanStyle
-    const labelStyle = this.state.labelStyle
+    const nextStyle = dirty ? dirtyStyle : cleanStyle;
+    const labelStyle = this.state.labelStyle;
     const anims = Object.keys(nextStyle).map(prop => {
       return Animated.timing(
-        labelStyle[prop],
-        {
+        labelStyle[prop], {
           toValue: nextStyle[prop],
           duration: 200
         },
         Easing.ease
       )
-    })
+    });
 
     Animated.parallel(anims).start();
   }
@@ -92,7 +92,7 @@ class FloatingLabelInput extends Component {
   }
 
   updateText(event) {
-    const text = event.nativeEvent.text
+    const text = event.nativeEvent.text;
     this.setState({ text });
 
     if (this.props.onEndEditing) {
@@ -197,14 +197,15 @@ class FloatingLabelInput extends Component {
   }
 }
 
-const textPropTypes = Text.propTypes || View.propTypes;
+var viewProptypes = ViewPropTypes || View.PropTypes;
+var textPropTypes = Text.propTypes && viewProptypes;
 const textInputPropTypes = TextInput.propTypes || textPropTypes;
 FloatingLabelInput.propTypes = {
   ...textInputPropTypes,
   inputStyle: textInputPropTypes.style,
   labelStyle: textPropTypes.style,
   disabled: PropTypes.bool,
-  style: View.propTypes.style,
+  style: viewProptypes.style,
 };
 
 let labelStyleObj = {

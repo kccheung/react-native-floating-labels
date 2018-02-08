@@ -141,6 +141,7 @@ class FloatingLabelInput extends Component {
         autoCorrect: this.props.autoCorrect,
         autoFocus: this.props.autoFocus,
         bufferDelay: this.props.bufferDelay,
+        caretHidden: this.props.caretHidden,
         clearButtonMode: this.props.clearButtonMode,
         clearTextOnFocus: this.props.clearTextOnFocus,
         controlled: this.props.controlled,
